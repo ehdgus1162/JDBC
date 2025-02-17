@@ -39,14 +39,17 @@ public class JdbcU {
             throw new RuntimeException("❌ 데이터베이스 연결 실패!", e);
         }
     }
-    public static void close (Connection connection) {
-        if (connection != null) {
-            try {
-                connection.close();
-                System.out.println("🔌 데이터베이스 연결 닫힘");
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+
+        // 모든 닫을 수 있는 리소스를 한 메서드에서 처리
+        public static void close(AutoCloseable resource) {
+            if (resource != null) {
+                try {
+                    resource.close();
+                } catch (Exception e) {
+                    System.err.println("❌ 리소스 닫기 실패: " + e.getMessage());
+                    e.printStackTrace();
+                }
             }
         }
     }
-}
+
